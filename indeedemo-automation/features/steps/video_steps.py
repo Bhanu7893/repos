@@ -1,10 +1,16 @@
 from behave import given, when, then
 from pages.login_page import LoginPage
 from pages.project_page import ProjectPage
+import time
 
 @given('I open the platform')
 def step_open_platform(context):
     context.driver.get(context.config.userdata.get('url', 'https://indeedemo-fyc.watch.indee.tv/'))
+    # Dismiss cookie consent banner if present
+    try:
+        context.dismiss_consent(context.driver, context.wait)
+    except:
+        pass
 
 @given('I log in using the PIN')
 def step_login(context):
@@ -16,12 +22,13 @@ def step_login(context):
 def step_navigate_project(context):
     proj = ProjectPage(context.driver)
     proj.open_test_automation_project()
+    
 
 @when('I switch to the Details tab and wait')
 def step_details_tab(context):
     proj = ProjectPage(context.driver)
     proj.click_details_tab()
-    proj.wait_seconds(6)
+    proj.wait_seconds(3)
 
 @when('I return to the Videos tab')
 def step_videos_tab(context):
@@ -32,7 +39,7 @@ def step_videos_tab(context):
 def step_play_pause(context):
     proj = ProjectPage(context.driver)
     proj.play_first_video()
-    proj.wait_seconds(10)
+    proj.wait_seconds(15)
     proj.pause_video()
 
 @when("I resume playback using Continue Watching")
